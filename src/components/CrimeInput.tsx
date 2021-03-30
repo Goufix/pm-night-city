@@ -14,11 +14,11 @@ interface Props {
 export const CrimeInput = ({ state, type, setState }: Props) => {
   const [inputId] = useState(uuid());
 
-  const internalState = state?.find(({ id }) => inputId === id)?.value;
+  const internalState = state?.find(({ id }: any) => inputId === id)?.value;
   const handleInternalChange = useCallback(
     (_e, value) => {
-      setState((oldState) => [
-        ...oldState.filter(({ inputId: id }) => id !== inputId),
+      setState((oldState: any) => [
+        ...oldState.filter(({ inputId: id }: any) => id !== inputId),
         { inputId, value },
       ]);
     },
@@ -45,9 +45,12 @@ export const CrimeInput = ({ state, type, setState }: Props) => {
 
   const classes = useStyles();
 
+  const crimes = Object.keys(Crimes);
+
   return (
     <Autocomplete
-      options={Object.keys(Crimes)}
+      // @ts-ignore
+      options={crimes}
       getOptionLabel={getCrimeName}
       style={{ width: 300 }}
       onChange={handleInternalChange}

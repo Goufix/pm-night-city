@@ -17,7 +17,7 @@ export default function Form() {
   const [inputs, setInputs] = useState<any>([]);
 
   const renderInput = () => {
-    setInputs((oldInputs) => [
+    setInputs((oldInputs: any) => [
       ...oldInputs,
       () => <CrimeInput type="text" setState={setCrimes} state={crimes} />,
     ]);
@@ -47,7 +47,7 @@ export default function Form() {
             alignItems="center"
             style={{ height: "100%" }}
           >
-            {inputs.map((Input, index) => (
+            {inputs.map((Input: any, index: number) => (
               <Grid key={index} item>
                 <Input />
               </Grid>
