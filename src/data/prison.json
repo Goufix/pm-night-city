@@ -1,0 +1,7 @@
+{
+  "THREAT": 10,
+  "LIBEL": 20,
+  "AGGRESSION": 30,
+  "PERJURY": 20,
+  "VEHICLE_THEFT": 15
+}
