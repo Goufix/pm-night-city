@@ -87,9 +87,7 @@ export default function Form() {
             multas e fiança manualmente.
           </Grid>
         </Typography>
-      ) : (
-        <div />
-      )}
+      ) : <div />}
     </Grid>
   );
 }

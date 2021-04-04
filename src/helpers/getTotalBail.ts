@@ -8,20 +8,37 @@ interface Args {
 }
 
 export const getTotalBail = (args: Args[]) => {
-  const crimesBail = args.map(
-    (crime) => bailValue[crime.crime] * crime.quantity || 0
-  );
+  const zeroBailCrimes: any[] = [];
+  const crimesBail = args.map((crime) => {
+    const total = bailValue[crime.crime] * crime.quantity;
+    const totalToReturn = total === 0 ? 0 : !total ? 1 : total;
 
-  const zeroBailCrimes = crimesBail.filter((value) => !!value);
+    if (total === 0) {
+      zeroBailCrimes.push({
+        total: totalToReturn,
+        crime: crime.crime,
+      });
+    }
+    return totalToReturn;
+  });
+
+  console.log("ZERO BAIL", zeroBailCrimes);
 
   if (zeroBailCrimes.length) {
     return `Não se aplica fiança, devido aos seguintes crimes: ${zeroBailCrimes
-      .map((_, index) => getCrimeName(args[index].crime))
+      .map((crime, index) => getCrimeName(crime.crime))
       .join(", ")}`;
   }
 
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
-  }).format(crimesBail.reduce((accumulator, value) => accumulator + value, 0));
+  }).format(
+    crimesBail.reduce((accumulator, value) => {
+      if (value === 1) {
+        value = 0;
+      }
+      return accumulator + value;
+    }, 0)
+  );
 };
