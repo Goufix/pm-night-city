@@ -9,6 +9,7 @@ import { getTotalPrisonTime } from "../helpers/getTotalPrisonTime";
 interface ICrimesSkeleton {
   id: String;
   value: Crimes;
+  quantity: number;
 }
 
 export default function Form() {
@@ -22,8 +23,6 @@ export default function Form() {
       () => <CrimeInput type="text" setState={setCrimes} state={crimes} />,
     ]);
   };
-
-  console.log(crimes);
 
   return (
     <Grid
@@ -57,19 +56,40 @@ export default function Form() {
       </Grid>
       <Grid item>
         <Typography style={{ color: "#99aab5" }}>
-          Pena: {getTotalPrisonTime(crimes.map(({ value }) => value))} meses
+          Pena:{" "}
+          <b>{getTotalPrisonTime(crimes.map(({ value }) => value))} meses</b>
         </Typography>
       </Grid>
       <Grid item>
         <Typography style={{ color: "#99aab5" }}>
-          Multas: {getTotalPenality(crimes.map(({ value }) => value))}
+          Multas:{" "}
+          <b>
+            {getTotalPenality(
+              crimes.map(({ value, quantity }) => ({ crime: value, quantity }))
+            )}
+          </b>
         </Typography>
       </Grid>
       <Typography style={{ color: "#99aab5" }}>
         <Grid item>
-          Fiança: {getTotalBail(crimes.map(({ value }) => value))}
+          Fiança:{" "}
+          <b>
+            {getTotalBail(
+              crimes.map(({ value, quantity }) => ({ crime: value, quantity }))
+            )}
+          </b>
         </Grid>
       </Typography>
+      {crimes.filter(({ value }) => value === Crimes.ACCOMPLICE).length ? (
+        <Typography style={{ color: "#a70000", fontWeight: "bold" }}>
+          <Grid item>
+            Atenção, deivdo a prática de Cúmplice, deve-se calcular a pena,
+            multas e fiança manualmente.
+          </Grid>
+        </Typography>
+      ) : (
+        <div />
+      )}
     </Grid>
   );
 }

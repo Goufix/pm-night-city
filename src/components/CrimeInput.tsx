@@ -1,6 +1,6 @@
 import { createStyles, makeStyles, TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { Crimes } from "../data/crimes";
 import getCrimeName from "../helpers/getCrimeName";
@@ -13,17 +13,25 @@ interface Props {
 
 export const CrimeInput = ({ state, type, setState }: Props) => {
   const [inputId] = useState(uuid());
+  const [quantity, setQuantity] = useState<number>();
+  const [internalType, setInternalType] = useState("");
 
-  const internalState = state?.find(({ id }: any) => inputId === id)?.value;
+  console.log("STATE", state);
   const handleInternalChange = useCallback(
     (_e, value) => {
+      setInternalType(value);
       setState((oldState: any) => [
         ...oldState.filter(({ inputId: id }: any) => id !== inputId),
-        { inputId, value },
+        { inputId, value, quantity },
       ]);
     },
-    [inputId, setState]
+    [inputId, setState, quantity]
   );
+
+  useEffect(() => {
+    handleInternalChange(null, internalType);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quantity, handleInternalChange]);
 
   const useStyles = makeStyles(() =>
     createStyles({
@@ -47,26 +55,43 @@ export const CrimeInput = ({ state, type, setState }: Props) => {
 
   const crimes = Object.keys(Crimes);
 
+  console.log("INTERNAL STATE [0]", internalType);
+
   return (
-    <Autocomplete
-      // @ts-ignore
-      options={crimes}
-      getOptionLabel={getCrimeName}
-      style={{ width: 300 }}
-      onChange={handleInternalChange}
-      renderInput={(params) => (
+    <>
+      <Autocomplete
+        // @ts-ignore
+        options={crimes}
+        getOptionLabel={getCrimeName}
+        style={{ width: 300 }}
+        onChange={handleInternalChange}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            color="primary"
+            variant="outlined"
+            style={{ margin: "10px" }}
+            className={classes.root}
+            placeholder="Pesquisar crime..."
+            key={inputId}
+            type={type}
+            value={internalType}
+          />
+        )}
+      />
+      {internalType === Crimes.MARKED_MONEY && (
         <TextField
-          {...params}
           color="primary"
           variant="outlined"
           style={{ margin: "10px" }}
           className={classes.root}
-          placeholder="Pesquisar crime..."
-          key={inputId}
-          type={type}
-          value={internalState}
+          placeholder="Quantidade"
+          key={Number(inputId) * Math.random()}
+          type="number"
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value) || 0)}
         />
       )}
-    />
+    </>
   );
 };

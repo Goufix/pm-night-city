@@ -1,8 +1,15 @@
 import { Crimes } from "../data/crimes";
 import penalities from "../data/penalities.json";
 
-export const getTotalPenality = (crimes: Crimes[]) => {
-  const crimesPenality = crimes.map((crime) => penalities[crime] || 0);
+interface Args {
+  crime: Crimes;
+  quantity: number;
+}
+
+export const getTotalPenality = (args: Args[]) => {
+  const crimesPenality = args.map(
+    (crime) => penalities[crime.crime] * crime.quantity || 0
+  );
 
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
