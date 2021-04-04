@@ -13,7 +13,7 @@ interface Props {
 
 export const CrimeInput = ({ state, type, setState }: Props) => {
   const [inputId] = useState(uuid());
-  const [quantity, setQuantity] = useState<number>();
+  const [quantity, setQuantity] = useState<number>(1);
   const [internalType, setInternalType] = useState("");
 
   console.log("STATE", state);
