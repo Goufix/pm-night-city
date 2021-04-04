@@ -12,7 +12,7 @@ export const getTotalBail = (args: Args[]) => {
     (crime) => bailValue[crime.crime] * crime.quantity || 0
   );
 
-  const zeroBailCrimes = crimesBail.filter((value) => value);
+  const zeroBailCrimes = crimesBail.filter((value) => !!value);
 
   if (zeroBailCrimes.length) {
     return `Não se aplica fiança, devido aos seguintes crimes: ${zeroBailCrimes
